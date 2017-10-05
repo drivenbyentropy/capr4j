@@ -8,6 +8,7 @@ CapR4J is a port of the [CapR algorithm](https://github.com/fukunagatsu/CapR) or
 ## Usage
 ```
 java -jar capr4j INPUT_SEQUENCE
+eg. java -jar GGGAGACAAGAATAAACGCTCAACAAACAACAGTACGTAGCATGCATGCTAGCTAGCTACTATGGGATTCGACAGGAGGCTCACAACAGGC
 ```
 
 ## Precomiled Jar File
