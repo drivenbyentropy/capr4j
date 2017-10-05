@@ -27,18 +27,18 @@ If you want to integrate `CapR4J` in your own pipeline, you can use the provided
 ```java
 
 public static void main(String[] args) {
-		private static CapR capr = new CapR();
+	private static CapR capr = new CapR();
     
-			// The sequence to be predicted
-      String seq = new String("GGGAGACAAGAATAAACGCTCAACAAACAACAGTACGTAGCATGCATGCTAGCTAGCTACTATGGGATTCGACAGGAGGCTCACAACAGGC");
+	// The sequence to be predicted
+	String seq = new String("GGGAGACAAGAATAAACGCTCAACAAACAACAGTACGTAGCATGCATGCTAGCTAGCTACTATGGGATTCGACAGGAGGCTCACAACAGGC");
 			
-			// Compute profile
-			capr.ComputeStructuralProfile(seq.getBytes(), seq.length());
+	// Compute profile
+	capr.ComputeStructuralProfile(seq.getBytes(), seq.length());
 
-			// Get profile. Returns a double array containing a linear representation of the context probabilities
-      // in the form of [h1,h2,...,hn,i1,i2,...,in,b1,b2,...,bn,m1,m2,...,mn,d1,d2,...,dn] where h,i,b,m,d
-      // stand for hairpin, inner loop, bulge loop, multiple loop, and dangling end respectively. The probability
-      // of a positition being paired is can be computed as 1-(h+i+b+m+d).
-			double[] profile =  capr.getStructuralProfile();
-	}
+	// Get profile. Returns a double array containing a linear representation of the context probabilities
+	// in the form of [h1,h2,...,hn,i1,i2,...,in,b1,b2,...,bn,m1,m2,...,mn,d1,d2,...,dn] where h,i,b,m,d
+	// stand for hairpin, inner loop, bulge loop, multiple loop, and dangling end respectively. The probability
+	// of a positition being paired is can be computed as 1-(h+i+b+m+d).
+	double[] profile =  capr.getStructuralProfile();
+}
 ```
