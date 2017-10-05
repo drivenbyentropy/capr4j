@@ -1,5 +1,5 @@
 # CapR4J
-## CapR4J - A java port of CapR, for calculating probabilities that each RNA base position is located within secondary structural contexts.
+## A java port of CapR, for calculating probabilities that each RNA base position is located within secondary structural contexts.
 
 CapR4J is a port of the [CapR algorithm](https://github.com/fukunagatsu/CapR) orignially created by Fukunaga et al and implemented in C++. It requires no external depencies is hence platform independent. In addition, an API is available which allows for the integration of CapR into bioinformatics pipelines in a programmatic manner. This port also generates a graphical representation of the structural context probabilities for each input sequence.
 
