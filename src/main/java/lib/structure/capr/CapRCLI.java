@@ -45,11 +45,11 @@ public class CapRCLI {
 			capr.ComputeStructuralProfile(seq.getBytes(), seq.length());
 
 			// Get profile
-			double[][] profile =  getMatrix(capr.getStructuralProfile(), sequence.length());
+			double[][] profile =  getMatrix(capr.getStructuralProfile(), seq.length());
 			
 			// Output profile
-			saveTxt(sequence_counter, String.format("sequence%s_profile.txt", sequence_counter), sequence, profile);
-			saveLogo(sequence_counter, String.format("sequence%s_logo.pdf", sequence_counter), sequence, profile);
+			saveTxt(sequence_counter, String.format("sequence%s_profile.txt", sequence_counter), seq, profile);
+			saveLogo(sequence_counter, String.format("sequence%s_logo.pdf", sequence_counter), seq, profile);
 			
 			sequence_counter++;
 		}
