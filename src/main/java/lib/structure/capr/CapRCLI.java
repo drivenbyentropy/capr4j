@@ -9,6 +9,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import gui.aptatrace.logo.Logo;
+
 /**
  * @author Jan Hoinka
  * Standalone command line interface for CapR
@@ -26,25 +28,33 @@ public class CapRCLI {
 	 * of apperence in args
 	 */
 	public static void main(String[] args) {
+		
+		// We need to be able to create graphical instances in pure console mode
+		System.setProperty("java.awt.headless", "true");
 
 		int sequence_counter = 1;
 		
 		for (String sequence : args) {
+			
+			System.out.println("Processing Sequence " + sequence_counter);
 			
 			// Make sure we have a valid sequence
 			String seq = validateAlphabet(sequence);
 			
 			// Compute profile
 			capr.ComputeStructuralProfile(seq.getBytes(), seq.length());
-			
+
 			// Get profile
 			double[][] profile =  getMatrix(capr.getStructuralProfile(), sequence.length());
 			
 			// Output profile
-			saveTxt(sequence_counter, String.format("Sequence%s_profile.txt", sequence_counter), sequence, profile);
+			saveTxt(sequence_counter, String.format("sequence%s_profile.txt", sequence_counter), sequence, profile);
+			saveLogo(sequence_counter, String.format("sequence%s_logo.pdf", sequence_counter), sequence, profile);
 			
 			sequence_counter++;
 		}
+		
+		System.out.println("Prediction completed. Exiting.");
 
 	}
 
@@ -62,14 +72,14 @@ public class CapRCLI {
 		for ( byte c : seq.getBytes()) {
 			
 			//valid?
-			if (c != 'A' || c != 'C' || c != 'G' || c != 'T' || c != 'U') {
+			if (c != (byte)'A' && c != (byte)'C' && c != (byte)'G' && c != (byte)'T' && c != (byte)'U') {
 				
-				throw new RuntimeException(String.format("ERROR: Sequence %s contains invalid character %s", seq, c));
+				throw new RuntimeException(String.format("ERROR: Sequence %s contains invalid character %s", seq, (char)c));
 				
 			}
 			
 			//convert (if required) and append
-			sb.append( c == 'U' ? 'T' : c);
+			sb.append( c == (byte)'U' ? 'T' : (char)c);
 			
 		}
 		
@@ -111,27 +121,27 @@ public class CapRCLI {
 		    	
 		    }
 		    
-		    writer.write("\t");
+		    writer.write("H\t");
 		    writer.write(String.join("\t", hairpin));
 		    writer.write("\n");
 		    
-		    writer.write("\t");
+		    writer.write("I\t");
 		    writer.write(String.join("\t", inner));
 		    writer.write("\n");
 		    
-		    writer.write("\t");
+		    writer.write("B\t");
 		    writer.write(String.join("\t", bulge));
 		    writer.write("\n");
 		    
-		    writer.write("\t");
+		    writer.write("M\t");
 		    writer.write(String.join("\t", multi));
 		    writer.write("\n");
 		    
-		    writer.write("\t");
+		    writer.write("D\t");
 		    writer.write(String.join("\t", dangling));
 		    writer.write("\n");
 		    
-		    writer.write("\t");
+		    writer.write("P\t");
 		    writer.write(String.join("\t", paired));
 		    
 		} catch (IOException e) {
@@ -139,8 +149,34 @@ public class CapRCLI {
 			e.printStackTrace();
 		}
 		
+		System.out.println("\tSaved profile to " + Paths.get(filename).toAbsolutePath().toString());
+		
 	}
 
+	/**
+	 * Generates a logo containing the probability distribution of the structural 
+	 * contexts for each nucleotide position.
+	 * @param number
+	 * @param filename
+	 * @param sequence
+	 * @param probabilities
+	 */
+	private static void saveLogo(int number, String filename, String sequence, double[][] probabilities) {
+		
+		String[] sequence_split = sequence.split("");
+		String[] nucleotide_positions = new String[sequence.length()];
+		for (int x=0; x<sequence.length(); x++){ nucleotide_positions[x] = (x+1)+":"+sequence_split[x]; }
+		
+		Logo logo = new Logo(probabilities, nucleotide_positions);
+		
+		logo.setAlphabetContexts();
+		logo.setBit(false);
+		logo.saveAsPDF(25*sequence.length(), 150, filename);
+		
+		System.out.println("\tSaved profile to " + Paths.get(filename).toAbsolutePath().toString());
+	}
+	
+	
 	/**
 	 * Converts linear representation of matrix to rectangular
 	 * @return [[h1,h2,...,hn],
@@ -156,12 +192,12 @@ public class CapRCLI {
 		
 		for(int x = 0; x<length; x++) {
 			
-			matrix[x][0] = profile[x*0]; //H
-			matrix[x][1] = profile[x*1]; //I
-			matrix[x][2] = profile[x*2]; //B
-			matrix[x][3] = profile[x*3]; //M
-			matrix[x][4] = profile[x*4]; //D
-			matrix[x][5] = 1.0 - (profile[x*0]+profile[x*1]+profile[x*2]+profile[x*3]+profile[x*4]); //P
+			matrix[x][0] = profile[x+(0*length)]; //H
+			matrix[x][1] = profile[x+(1*length)]; //I
+			matrix[x][2] = profile[x+(2*length)]; //B
+			matrix[x][3] = profile[x+(3*length)]; //M
+			matrix[x][4] = profile[x+(4*length)]; //D
+			matrix[x][5] = 1.0 - (profile[x+(0*length)]+profile[x+(1*length)]+profile[x+(2*length)]+profile[x+(3*length)]+profile[x+(4*length)]); //P
 			
 		}
 	

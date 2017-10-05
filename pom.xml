@@ -1,10 +1,11 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>capr4j</groupId>
-  <artifactId>capr4j</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-  <name>CapR4J</name>
-  <description>A port of CapR</description>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>capr4j</groupId>
+	<artifactId>capr4j</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>CapR4J</name>
+	<description>A port of CapR</description>
 	<profiles>
 		<profile>
 			<id>windows</id>
@@ -14,29 +15,27 @@
 		</profile>
 	</profiles>
 	<build>
+			<!-- Make sure we copy all required resouces into to jar. This
+		will mirror the source locations. I.e. files in foo/bar/ in the 
+		source folder will be packaged to foo/bar/ in the jar. -->
+		<resources>
+			<resource>
+				<filtering>false</filtering>
+				<directory>${basedir}/src/main/java</directory>
+				<includes>
+					<include>**/*.fxml</include>
+					<include>**/*.css</include>
+				</includes>
+			</resource>
+			<resource>
+				<filtering>false</filtering>
+				<directory>${basedir}/src/main/resources</directory>
+				<includes>
+					<include>**/*.*</include>
+				</includes>
+			</resource>
+		</resources>
 		<plugins>
-<!-- 		<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-dependency-plugin</artifactId>
-				<version>2.6</version>
-				<executions>
-					<execution>
-						<id>unpack-dependencies</id>
-						<phase>package</phase>
-						<goals>
-							<goal>unpack-dependencies</goal>
-						</goals>
-						<configuration>
-							<excludeScope>system</excludeScope>
-							<excludes>META-INF/*.SF</excludes>
-							<excludes>META-INF/*.DSA</excludes>
-							<excludes>META-INF/*.RSA</excludes>
-							<excludeGroupIds>junit,org.mockito,org.hamcrest</excludeGroupIds>
-							<outputDirectory>${project.build.directory}/classes</outputDirectory>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin> -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
@@ -48,7 +47,6 @@
 							<goal>shade</goal>
 						</goals>
 						<configuration>
-							<minimizeJar>true</minimizeJar>
 							<finalName>capr4j</finalName>
 							<transformers>
 								<transformer
@@ -56,14 +54,16 @@
 									<mainClass>lib.structure.capr.CapRCLI</mainClass>
 								</transformer>
 							</transformers>
-							<configuration>
-								<excludeScope>system</excludeScope>
-								<excludes>META-INF/*.SF</excludes>
-								<excludes>META-INF/*.DSA</excludes>
-								<excludes>META-INF/*.RSA</excludes>
-								<excludeGroupIds>junit,org.mockito,org.hamcrest</excludeGroupIds>
-								<outputDirectory>${project.build.directory}/classes</outputDirectory>
-							</configuration>
+							<filters>
+								<filter>
+									<artifact>*:*</artifact>
+									<excludes>
+										<exclude>META-INF/*.SF</exclude>
+										<exclude>META-INF/*.DSA</exclude>
+										<exclude>META-INF/*.RSA</exclude>
+									</excludes>
+								</filter>
+							</filters>
 						</configuration>
 					</execution>
 				</executions>
