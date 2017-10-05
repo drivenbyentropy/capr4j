@@ -185,7 +185,7 @@ public class CapRCLI {
 	 *          [m1,m2,...,mn],
 	 *          [d1,d2,...,dn],
 	 *          [p1,p2,...,pn]]
-	 */
+	 */ 
 	private static double[][] getMatrix(double[] profile, int length){
 		
 		double[][] matrix = new double[length][6];
